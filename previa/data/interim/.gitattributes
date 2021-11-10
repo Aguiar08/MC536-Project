@@ -1,0 +1,2 @@
+all_games_chessdotcom.csv filter=lfs diff=lfs merge=lfs -text
+all_games_lichess.csv filter=lfs diff=lfs merge=lfs -text
