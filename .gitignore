@@ -1,3 +1,5 @@
 
 previa/data/interim/all_games_chesscom.csv
 previa/data/interim/all_games_lichess.csv
+previa/data/interim/all_games_chessdotcom.csv
+previa/data/processed/all_games.csv

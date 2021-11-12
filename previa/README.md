@@ -53,15 +53,14 @@ Qualquer mídia usada no seu projeto: vídeo, imagens, animações, slides etc. 
 * `Enrico Piovesana Fernandes` - `RA: 233895`
 
 ## Resumo do Projeto
-> Texto resumindo o projeto.
+> Nosso projeto busca oferecer um dataset compreensivo e abrangente com diversos jogadores titulados e com grande variedade e quantidade de partidas com ênfase em quantidade para facilitar diversas análises possíves sobre o comportamento dessas partidas e desses jogadores.
 
 ## Slides da Apresentação
-> Coloque aqui o link para o PDF da apresentação prévia
+> ![Slides Xadrez](slides/slides-chess.pdf)
 
 ## Modelo Conceitual Preliminar
 
-> Coloque aqui a imagem do modelo conceitual preliminar em ER ou UML, como o exemplo a seguir:
-> ![ER Taxi](images/er-taxi.png)
+> ![Modelo Xadrez](assets/modelo-relacional.png)
 
 ## Modelos Lógicos Preliminares
 
