@@ -60,8 +60,7 @@ Qualquer mídia usada no seu projeto: vídeo, imagens, animações, slides etc. 
 
 ## Modelo Conceitual Preliminar
 
-> Coloque aqui a imagem do modelo conceitual preliminar em ER ou UML, como o exemplo a seguir:
-> ![ER Taxi](images/er-taxi.png)
+> ![Modelo Xadrez](assets/modelo-relacional.png)
 
 ## Modelos Lógicos Preliminares
 
