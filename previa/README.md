@@ -60,7 +60,7 @@ Qualquer mídia usada no seu projeto: vídeo, imagens, animações, slides etc. 
 
 ## Modelo Conceitual Preliminar
 
-> ![Modelo Xadrez](assets/modelo-relacional.png)
+> ![Modelo Xadrez](assets/modelo-conceitual.png)
 
 ## Modelos Lógicos Preliminares
 
