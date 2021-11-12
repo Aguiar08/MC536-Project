@@ -56,7 +56,7 @@ Qualquer mídia usada no seu projeto: vídeo, imagens, animações, slides etc. 
 > Nosso projeto busca oferecer um dataset compreensivo e abrangente com diversos jogadores titulados e com grande variedade e quantidade de partidas com ênfase em quantidade para facilitar diversas análises possíves sobre o comportamento dessas partidas e desses jogadores.
 
 ## Slides da Apresentação
-> ![Slides Xadrez](slides/slides - chess.pdf)
+> ![Slides Xadrez](slides/slides-chess.pdf)
 
 ## Modelo Conceitual Preliminar
 
