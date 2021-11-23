@@ -64,6 +64,7 @@ título da base | link | breve descrição
 ----- | ----- | -----
 `Lichess API` | `https://lichess.org/api` | `Utilizou-se um wrapper para python disponível em` *https://python-lichess.readthedocs.io* `para a coleta de dados do site Lichess.org, junto com uma chave de autenticação para maior número de transações permitidas por minuto.`
 `Chess.com API` | `https://www.chess.com/news/view/published-data-api` | `Utilizou-se o wrapper de python disponível em` *https://github.com/sarartur/chess.com* `para a coleta de dados do site Chess.com.`
+`Lichess Tournament Webpage` | `https://lichess.org/blog/X0I7phAAACQAMCfH/titled-arena-announcements` | `Utilizou-se de web-scraping para obter links de torneios envolvendo jogadores titulados.`
 
 
 ## Detalhamento do Projeto
