@@ -15,32 +15,21 @@
 
 ## Modelo Conceitual
 
-> ![Modelo Xadrez](assets/modelo-conceitual.png)
+> ![Modelo Xadrez](images/modelo-conceitual.png)
 
 ## Modelos Lógicos
 
-> Coloque aqui os modelos lógicos dos bancos de dados relacionados aos modelos conceituais. Para o modelo relacional, sugere-se o formato a seguir. Para outros modelos lógicos, sugere-se aqueles apresentados em sala.
-
-> Exemplo de modelo lógico relacional
+# Modelo lógico relacional
 ~~~
 PLAYER(_username_, title, bullet_rating, blitz_rating, rapid_rating, _site_name_)
 GAMES(_id_, ranked, time_control, status, winner, white, black, moves, opening, site_name)
+  white chave estrangeira -> PLAYER(username)
+  black chave estrangeira -> PLAYER(username)
 OPENING(ECO, Opening, _PGN_)
-
 ~~~~
 
-
-~~~
-PESSOA(_Código_, Nome, Telefone)
-ARMÁRIO(_Código_, Tamanho, Ocupante)
-  Ocupante chave estrangeira -> PESSOA(Código)
-~~~
-
-> Para o modelo de grafos de propriedades, utilize este
-> [modelo de base](https://docs.google.com/presentation/d/10RN7bDKUka_Ro2_41WyEE76Wxm4AioiJOrsh6BRY3Kk/edit?usp=sharing) para construir o seu.
-> Coloque a imagem do PNG do seu modelo lógico como ilustrado abaixo (a imagem estará na pasta `image`):
->
-> ![Modelo Lógico de Grafos](images/modelo-logico-grafos.png)
+# Grafo de propriedades
+> ![Grafo Propriedades](images/grafo-propriedades.png)
 
 > Para o modelo de grafos de conhecimento, utilize a abordagem
 > (recurso, propriedade, valor) para apresentar seu grafo exemplo.
@@ -73,7 +62,9 @@ título do arquivo/base | link | breve descrição
 
 título da base | link | breve descrição
 ----- | ----- | -----
-`<título da base>` | `<link para a página da base>` | `<breve descrição da base>`
+`Lichess API` | `https://lichess.org/api` | `Utilizou-se um wrapper para python disponível em` *https://python-lichess.readthedocs.io* `para a coleta de dados do site Lichess.org, junto com uma chave de autenticação para maior número de transações permitidas por minuto.`
+`Chess.com API` | `https://www.chess.com/news/view/published-data-api` | `Utilizou-se o wrapper de python disponível em` *https://github.com/sarartur/chess.com* `para a coleta de dados do site Chess.com.`
+
 
 ## Detalhamento do Projeto
 > Apresente aqui detalhes do processo de construção do dataset e análise. Nesta seção ou na seção de Perguntas podem aparecer destaques de código como indicado a seguir. Note que foi usada uma técnica de highlight de código, que envolve colocar o nome da linguagem na abertura de um trecho com `~~~`, tal como `~~~python`.
