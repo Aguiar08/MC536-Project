@@ -156,24 +156,24 @@ plt.show();
 >   * Após a filtragem, realizamos a contagem de cada caso, listando-os em uma tabela, obtendo os seguintes resultados
 >* ![Query das Peças](images/pecas_query.jpg)
 >* ![Resultado das Peças](images/pecas_resultados.jpg)
->   * Podemos perceber que a rainha é a peça "mais matadora", isto pode ser explicado pelo fato que ela controla mais casas ao mesmo tempo se comparada com as outras peças. Além disso, jogadas em que o rei se move para que outra peça realize o Xeque-Mate são considerados Mates pelo Rei, que são extremamente raras.
+>   * Podemos perceber que a rainha é a peça "mais matadora", isto pode ser explicado pelo fato que ela controla mais casas ao mesmo tempo se comparada com as outras peças. Além disso, jogadas em que o rei se move para que outra peça realize o Xeque-Mate são considerados Mates pelo Rei, que são extremamente raras. Esta Query tem uma dificuldade alta.
 
 ### Perguntas/Análise Propostas mas Não Implementadas
 
 #### Pergunta/Análise 1
-> * Pergunta 1
+> * Qual a casa que o Rei mais toma Xeque-Mate?
 >   
->   * Explicação em linhas gerais de como a base pode ser usada para responder esta pergunta e a sua relevância.
+>   * A base, por conter o PGN do jogo apresenta toda a evolução da partida, assim, pode-se rastrear a movimentação do rei, identificando a casa de "morte" do rei. Seria interessante esta análise para identificarmos, tanto para Brancas, quanto para Pretas, quais são as casas mais fatais para esta peça. A dificuldade desta query é elevadíssima devido a dificuldade de se manipular Strings em SQL e também a presença do movimento de Roque, que não indica que a peça do Rei foi movida, assim, seria preciso muitas pequenas checagens para indicar o local corretamente.
 
 #### Pergunta/Análise 2
-> * Pergunta 2
+> * Qual a coluna que promove mais peões?
 >   
->   * Explicação em linhas gerais de como a base pode ser usada para responder esta pergunta e a sua relevância.
+>   * Novamente, por conta do PGN, podemos identificar uma jogada de promoção quando há a presença do sinal "=", que é conectado a letra da coluna de origem do peão. Assim, poderiamos notar se peões mais centrais tem uma maior probabilidade de serem promovidos se comparados com peões das bordas, por exemplo. Esta query requer uma difuculdade mediana, visto que somente precisariamos encontrar o sinal de "=" na string e seu antecessor.
 
 #### Pergunta/Análise 3
-> * Pergunta 3
+> * Qual é a primeira peça mais capturada?
 >   
->   * Explicação em linhas gerais de como a base pode ser usada para responder esta pergunta e a sua relevância.
+>   * Podemos identificar utilizando a sequencia de jogadas de Xadrez a primeira ocorrencia do sinal de captura "x" para encontrar o momento que houve a captura, além disso, podemos analisar qual peça estava na casa destino da captura pela sequencia de jogadas. Assim, mapearemos as quantidades de captura de cada peça para encontrar o resultado desejado. A dificuldade desta query é elevadíssima devido a dificuldade de se manipular Strings em SQL e também a dificuldade de identificar qual peça estaria na casa de destino da captura, visto que, deveriamos manter salvos as localizações de todas as peças do tabuleiro.
 
 > Coloque um link para o arquivo do notebook que executa o conjunto de queries. Ele estará dentro da pasta `notebook`.
 > ![Notebook das Querys](notebooks/chesssql.ipynb) 
