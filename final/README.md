@@ -70,29 +70,154 @@ título da base | link | breve descrição
 
 
 ## Detalhamento do Projeto
-> Apresente aqui detalhes do processo de construção do dataset e análise. Nesta seção ou na seção de Perguntas podem aparecer destaques de código como indicado a seguir. Note que foi usada uma técnica de highlight de código, que envolve colocar o nome da linguagem na abertura de um trecho com `~~~`, tal como `~~~python`.
-> Os destaques de código devem ser trechos pequenos de poucas linhas, que estejam diretamente ligados a alguma explicação. Não utilize trechos extensos de código. Se algum código funcionar online (tal como um Jupyter Notebook), aqui pode haver links. No caso do Jupyter, preferencialmente para o Binder abrindo diretamente o notebook em questão.
+
+Nosso projeto pode ser dividido em partes, que vão desde a extração de dados da web utilizando APIs e webscraping à transformação e análise dos dados. São elas:
+
+### Extração de dados de páginas na Web
+
+Notebooks relacionados: ![Lichess Fetcher](notebooks/lichess_fetcher.ipynb)
+
+Primeiramente, é perceptível que nossa extração de dados foi feita focada no uso de APIs, no entanto utilizamos web-scraping em uma ocasião específica, como pode ser vista no começo do arquivo `lichess_fetcher`, onde nós obtemos o link de diversos torneios de jogadores titulados, para que possamos em seguida utilizá-las como "mini-databases" de usernames de jogadores para pegar seus jogos/informações. O processo está ilustrado no código a seguir.
 
 ~~~python
-df = pd.read_excel("/content/drive/My Drive/Colab Notebooks/dataset.xlsx");
-sns.set(color_codes=True);
-sns.distplot(df.Hemoglobin);
-plt.show();
+url = "https://lichess.org/blog/X0I7phAAACQAMCfH/titled-arena-announcements"
+table_MN = pd.read_html(url)
+titled_tournaments = table_MN[0]
+def linkify(x):
+    return x[9:-11]
+titled_tournaments['Link'] = titled_tournaments['Link'].apply(linkify)
+titled_tournaments['tag'] = titled_tournaments['Link'].apply(lambda x: x[31:])
+titled_tournaments.head()
 ~~~
 
-> Se usar Orange para alguma análise, você pode apresentar uma captura do workflow, como o exemplo a seguir e descrevê-lo:
-![Workflow no Orange](images/orange-zombie-meals-prediction.png)
+### Agregação de dados fragmentados obtidos a partir de API
 
-> Coloque um link para o arquivo do notebook, programas ou workflows que executam as operações que você apresentar.
+A obtenção de dados utilizando APIs corresponde a maior parte de nosso projeto, visto que desde o começo do trabalho nosso objetivo era pegar a maior quantidade possível de jogos de jogadores titulados, dos dois maiores sites de xadrez disponíveis, que presumidamente serão todos de alto nível.
 
-> Aqui devem ser apresentadas as operações de construção do dataset:
-* extração de dados de fontes não estruturadas como, por exemplo, páginas Web
-* agregação de dados fragmentados obtidos a partir de API
-* integração de dados de múltiplas fontes
-* tratamento de dados
-* transformação de dados para facilitar análise e pesquisa
+### Lichess
 
-> Se for notebook, ele estará dentro da pasta `notebook`. Se por alguma razão o código não for executável no Jupyter, coloque na pasta `src` (por exemplo, arquivos do Orange ou Cytoscape). Se as operações envolverem queries executadas atraves de uma interface de um SGBD não executável no Jupyter, como o Cypher, apresente na forma de markdown.
+Notebooks relacionados: 
+* ![Lichess Fetcher](notebooks/lichess_fetcher.ipynb)
+
+Primeiramente, utilizamos a API do Lichess para que fosse possível formar uma lista de todos os jogadores que participaram nos torneios obtidos na etapa anterior. É importante destacar que a API do lichess foi utilizada através de um wrapper chamado `berserk`, e que para acelerar a obtenção de informações através da API foi necessária a utilização de um token privado gerado disponível em https://lichess.org/account/oauth/token/create, e utilizado como ilustrado no excerto de código a seguir.
+
+~~~python
+import berserk
+
+session = berserk.TokenSession('INSERT_KEY')
+client = berserk.Client(session=session)
+~~~
+
+A seguir, utilizamos loops para extrair o nome dos jogadores dos torneios obtidos, e em seguida, utilizando mais laços e o comando `get_rating_history(id)`, obtivemos o rating dos três formatos de tempo mais jogados nos sites - bullet, blitz e rapid. Por fim, agora que já tinhamos uma lista de players, bastava rodar o comando `export_by_player(username)`, que retorna um arquivo .json com inúmeras informações a respeito de todos os jogos jogados desde a criação da conta pelo jogador. Salvamos as informações que tinhamos interesse em diversas tabelas menores, para que no futuro pudéssemos juntá-las em uma tabela com todos os jogos de todos os sites.
+
+### Chess.com
+
+Notebooks relacionados: 
+* ![Chess.com Player Fetcher](notebooks/chess-com-player-fetcher.ipynb)
+* ![Chess.com Game Fetcher](notebooks/chess-com-game-fetcher.ipynb)
+
+Após a obtenção dos dados do lichess, partimos para uma abordagem semelhante, mas para o site chess.com. Primeiramente, encontramos o wrapper disponível em `https://github.com/sarartur/chess.com`, que nos ajuda a utilizar os comandos da API em nosso código. Diferente do lichess, esta API possui o comando `chessdotcom.get_titled_players(title)`, que retorna uma lista de todos os jogadores que possuem o título desejado. Nós optamos por utilizar esse comando, o que apresentou pontos positivos, como acelerar bastante o processo de obtenção de nomes de jogadores, e pontos negativos, como pegar diversas contas de jogadores inativos/que não existem mais. Em seguida, realizamos um processo semelhante ao do Lichess para obter os ratings desejados de cada jogador.
+
+A parte de obter os jogos de cada player foi mais complexa nesse caso. O melhor comando para isso foi o `chessdotcom.get_player_games_by_month(username, month, year)`, no entanto para obter os meses que o jogador possui jogos nós modificamos um código antigo encontrado no link `https://www.reddit.com/r/chess/comments/9ifkaq/how_i_downloaded_all_my_chesscom_games_using/` para retornar os meses em que o usuário possui jogos ao invés de retornar os jogos em si.
+
+Em seguida, utilizamos o comando já mencionado para diversos jogadores, obtendo todos os jogos registrados em suas contas desde sua criação e repetindo o processo de salvar os jogos em tabelas menores para facilitar a navegação e a integração com o git.
+
+### Integração entre databases e tratamento de dados
+
+Notebooks relacionados: 
+* ![Lichess Fetcher](notebooks/lichess_fetcher.ipynb)
+* ![Chess.com Player Fetcher](notebooks/chess-com-player-fetcher.ipynb)
+* ![Chess.com Game Fetcher](notebooks/chess-com-game-fetcher.ipynb)
+* ![Chess.com PGN Cleaner](notebooks/lichess_fetcher.ipynb)
+* ![Opening Classifier](notebooks/opening-classifier.ipynb)
+
+Como já mencionado, a maior parte dos dados já era tratada assim que obtida da API, de modo que as tabelas do chess.com foram feitas moldadas nas tabelas do Lichess. No entanto, ainda foi necessário algum tratamento de dados, tais como:
+* Tratamento de PGN
+  
+  * O PGN fornecido pela API do chess.com correspondia a uma descrição extremamente mais detalhada do que nós precisávamos para nossas análises, com informações que eram obtidas de outras maneiras (por exemplo os jogadores) ou ainda a informação de quanto tempo cada jogador possuia após realizar cada um de seus movimentos. O tratamento foi feito utilizando a função representada a seguir.
+    ~~~python
+    def trataPGN(pgn):
+        # remove clock
+        txt = '{\[%clk \d+:\d+:\d+(\.\d+)?\]}'
+        a = re.sub(txt, "", pgn)
+
+        # remove header
+        txt = '\[.+\]'
+        a = re.sub(txt, "", a)
+        a
+
+        # remove \n
+        txt = '\\n'
+        a = re.sub(txt, "", a)
+        a
+        
+        return(a)    
+    ~~~
+    
+* Integração das Openings
+  
+  * Após obtermos uma quantidade que julgamos ser suficiente de jogos, decidimos que seria interessante classificar cada uma das openings jogadas nesses jogos. Para isso, utilizamos as tabelas disponibilizadas em `https://github.com/niklasf/chess-openings`, que são basicamente uma organização da Enciclopédia de Openings em arquivos .tsv. Em seguida, tratamos novamente o PGN dos jogos de ambos os sites, para que ambos ficassem de acordo com o PGN utilizado nesses arquivos. Finalmente, foi possível rodar a função abaixo em todos os jogos que obtivemos até então, resultando em uma nova coluna, com o nome da opening de cada jogo, classificada.
+    ~~~ python
+    def encontraOpening(moves, openings):
+      if type(moves) == float:
+          return ''
+      for i in range(0,len(openings)):
+          moveString = openings['pgn'][i]
+          if moveString in moves:
+              return openings['name'][i]
+      return ''
+    ~~~
+
+### Tranformação de dados para facilitar análise e pesquisa
+
+Notebooks relacionados: 
+* ![Database Joiner](notebooks/db_joiner.ipynb)
+
+Para realizar as querys desejadas, nós fizemos diversas transformações nos dados obtidos, tais como:
+
+* Junção de databases
+  * Nessa etapa, tivemos que finalmente, realizar a junção entre as diversas tabelas menores em uma tabela que acabou ficando com aproximadamente 1 milhão de jogos. Ela não pode ser upada no github devido ao seu tamanho, mas pode ser gerada localmente utilizando o notebook `db_joiner`. Outra ressalva é que para realizar consultas em SQL nessa tabela é necessário no mínimo 16gb de memória RAM, para que seja possível evitar o erro `outofmemoryexception` ao criar a tabela no notebook `chesssql`.
+
+* Atualização do PGN do lichess
+  * Foi necessário realizar uma última mudança no PGN dos jogos provenientes do lichess, visto que os jogos do chess.com terminavam com o resultado da partida (por exemplo, 1-0 ou 0-1). Como uma tentativa de homogenizar isso de forma simples, adicionamos ` End` ao final de cada String de jogos do Lichess.
+
+* Remoção de dados corrompidos em ambos os sites
+  * Durante as consultas em SQL, percebemos que existiam diversos jogos com movimentos corrompidos, em que ao invés do nome da peça que estava se movimentando o caractere `@` era colocado. A função abaixo foi utilizada para resolver esse problema, o que nos fez remover aproximadamente 7.000 jogos.
+    ~~~python
+    def brokenFixer(x):
+      if (type(x)==float):
+          return x
+      elif ("@" not in x):
+          return x
+      else:
+          x = 'broken'
+          return x
+    ~~~
+
+* Atualização dos dados do Lichess pra identificar o vencedor por username ao invés de cor
+  * Novamente durante as consultas em SQL, percebemos que o Lichess salvava o vencedor de seus jogos pela cor ao invés do username do vencedor. Utilizamos a função abaixo para realizar essa mudança, salvando o nome do usuário que venceu.
+    ~~~python
+    def lichessFixer(white, black, winner):
+      if winner == 'white':
+          return white
+      elif winner == 'black':
+          return black
+      else:
+          return winner
+    ~~~
+
+* Atualização do nome dos resultados do chess.com para corresponder aos do lichess
+  * Percebemos, durante as consultas, que alguns status que deveriam signficar a mesma coisa em sites diferentes tinham nomes diferentes. A função abaixo resolve o problema.
+    ~~~python
+    def resignerplus(x):
+      if x == 'resign':
+          return 'resigned'
+      elif x == 'agreed':
+          return 'draw'
+      else:
+          return x
+    ~~~
+
 
 ## Evolução do Projeto
   O projeto começou com a ideia de obter apenas partidas de torneios e implementar torneios, mas a ideia mudou para obter partidas gerais de todos os jogadores titulados que conseguissemos encontrar, para obter o maior número possível de dados.
