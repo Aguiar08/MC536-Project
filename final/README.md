@@ -75,7 +75,8 @@ Nosso projeto pode ser dividido em partes, que vão desde a extração de dados 
 
 ### Extração de dados de páginas na Web
 
-Notebooks relacionados: ![Lichess Fetcher](notebooks/lichess_fetcher.ipynb)
+Notebooks relacionados: 
+* ![Lichess Fetcher](notebooks/lichess_fetcher.ipynb)
 
 Primeiramente, é perceptível que nossa extração de dados foi feita focada no uso de APIs, no entanto utilizamos web-scraping em uma ocasião específica, como pode ser vista no começo do arquivo `lichess_fetcher`, onde nós obtemos o link de diversos torneios de jogadores titulados, para que possamos em seguida utilizá-las como "mini-databases" de usernames de jogadores para pegar seus jogos/informações. O processo está ilustrado no código a seguir.
 
