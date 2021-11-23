@@ -95,13 +95,13 @@ plt.show();
 > Se for notebook, ele estará dentro da pasta `notebook`. Se por alguma razão o código não for executável no Jupyter, coloque na pasta `src` (por exemplo, arquivos do Orange ou Cytoscape). Se as operações envolverem queries executadas atraves de uma interface de um SGBD não executável no Jupyter, como o Cypher, apresente na forma de markdown.
 
 ## Evolução do Projeto
->O projeto começou com a ideia de obter apenas partidas de torneios e implementar torneios, mas a ideia mudou para obter partidas gerais de todos os jogadores titulados que conseguissemos encontrar, para obter o maior número possível de dados.
+  O projeto começou com a ideia de obter apenas partidas de torneios e implementar torneios, mas a ideia mudou para obter partidas gerais de todos os jogadores titulados que conseguissemos encontrar, para obter o maior número possível de dados.
 
->O segundo problema foi encontrado quando consideramos que as pessoas poderiam usar o dataset para descobrir a opening utilizada em cada jogo e vimos que, através do SQL, tal processamento seria de grande complexidade, então optamos por fazer esse o pré-processamento dessas informações.
+  O primeiro problema que encontramos foi o escopo do nosso projeto: inicialmente tinhamos como objetivo catalogar todos os jogos de jogadores titulados de ambas as plataformas, no entanto, conforme o número e jogos cresceu exponencialmente, rapidamente atingindo 1 milhão de jogos, e com isso vimos que poderiamos apenas cobrir cerca de 200-300 jogadores. Devido a restrições de tamanho máximo de arquivo no GitHub, para solucionar isso, o projeto foi separado em multiplos arquivos .csv menores, com centenas de MB cada, que devem ser juntados localmente através do notebook db_joiner.ipynb, para fazer um unico arquivo .csv de mais de 1 GB.
 
-> Relatório de evolução, descrevendo as evoluções na modelagem do projeto, dificuldades enfrentadas, mudanças de rumo, melhorias e lições aprendidas. Referências aos diagramas, modelos e recortes de mudanças são bem-vindos.
-> Podem ser apresentados destaques na evolução dos modelos conceitual e lógico. O modelo inicial e intermediários (quando relevantes) e explicação de refinamentos, mudanças ou evolução do projeto que fundamentaram as decisões.
-> Relatar o processo para se alcançar os resultados é tão importante quanto os resultados.
+  O segundo problema foi que os sites não tinham uma notação padronizada para o PGN de seus jogos, para que ambos pudessem ser processados usando os mesmos algoritmos, tivemos que converter a sintaxe de um dos sites, escolhemos a notação do Chess.com por ser mais simples e aplicamos as transformações nos PNGs do site Lichess.
+
+  O terceiro problema foi encontrado quando consideramos que as pessoas poderiam usar o dataset para descobrir a opening utilizada em cada jogo e vimos que, através do SQL, tal processamento seria de grande complexidade, então optamos por fazer esse o pré-processamento dessas informações. Pegamos, portanto, a notação das jogadas do livro "Encyclopaedia of Chess Openings" e portamos elas para um arquivo .csv. No entanto, o processo de classificação precisava testar todas as aberturas possíveis para cada jogo indivualmente no algoritmo de classificação, o que levava horas. Então classificamos as aberturas em ordem descrescente do tamanho de seus PGNs, que significa que a primeira jogada encontrada que coubesse era a abertura mais extensa e não se precisava fazer várias verificações, resultando em um algoritmo muito mais rápido.
 
 ## Perguntas de Pesquisa/Análise Combinadas e Respectivas Análises
 
