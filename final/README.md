@@ -23,8 +23,10 @@
 ~~~
 PLAYER(_username_, title, bullet_rating, blitz_rating, rapid_rating, _site_name_)
 GAMES(_id_, ranked, time_control, status, winner, white, black, moves, opening, site_name)
+  winner chave estrangeira -> PLAYER(username)
   white chave estrangeira -> PLAYER(username)
   black chave estrangeira -> PLAYER(username)
+  opening chave estrangeira -> OPENING(PGN)
 OPENING(ECO, Opening, _PGN_)
 ~~~~
 
@@ -111,25 +113,50 @@ plt.show();
 
 > As respostas às perguntas podem devem ser ilustradas da forma mais rica possível com tabelas resultantes, grafos ou gráficos que apresentam os resultados. Os resultados podem ser analisados e comentados. Veja um exemplo de figura ilustrando uma comunidade detectada no Cytoscape:
 
-> ![Comunidade no Cytoscape](images/cytoscape-comunidade.png)
-
 #### Pergunta/Análise 1
-> * Pergunta 1
+> * Quantidades e Tipos de Roques em Partidas
 >   
->   * Explicação sucinta da análise que será feita e conjunto de queries que
->     responde à pergunta.
+>   * A análise propõe compararmos o número de partidas e os tipos de roques para identificar qual a jogada mais feita entre os jogadores. A análise foi realisada em SQL utilizando método de Substrings para conseguir-se diferenciar Roques Curtos de Grandes. 
+>* ![Roques Sql](images/roques_sql.jpg)
+>   * Como podemos perceber pela imagem, temos que Roques Curtos são representados pelo texto "O-O" e Roques Longos representados por "O-O-O". Para não ocorrer a intersecção das substrings tivemos que descobrir quais são os simbolos que acompanham o roque, sendo eles o espaço, indicando que a jogada ocorreu normalmente, o simbolo "+", indicando que após o roque houve xeque e por útlimo o símbolo "#", indicando que após o roque houve Xeque-Mate. Os seguintes resultados foram obtidos:
+>* ![Roques Resultados](images/roques_resultados.jpg)
+>   * Como podemos perceber, roques curtos são mais realizados que longos, como também, que a média de roques por partida é superior a 1, o que faz sentido, visto que ambos os jogadores podem realizar a jogada. A dificuldade desta query é mediana.
+
 
 #### Pergunta/Análise 2
-> * Pergunta 2
+> * Porcentagem de Tipos de Xeque Mate relacionado ao Total
 >   
->   * Explicação sucinta da análise que será feita e conjunto de queries que
->     responde à pergunta.
+>   * Analisaremos, desta vez, o movimento de Xeque-Mate de uma partida, visando obter as porcentagens de qual foi o movimento realizado para o término da partida. Para isto, primeiramente realizou-se uma filtragem dos PGNs das partidas, selecionando as que terminam em "#" indicando o movimento. Além disso, foi criada uma tabela auxiliar que listava todas as últimas jogadas destes jogos.
+>* ![Jogadas de Mates](images/mates_jogadas.jpg)
+>   * Posteriormente selecionamos 7 tipos de jogadas que podem resultar mate e as filtramos segundo o seu padrão de texto em um PGN (Portable Game Notation), sendo elas:
+>     * `O movimento de peão`, que são representados por letras minúsculas da casa de destino;
+>     * `A captura de uma peça por um peão`, representado pela letra minuscula da fileira de origem do peão, de um "x" que representa a captura e da casa de destino;
+>     * `A promoção de um peão`, representado pela casa de destino do peão, seguido do símbolo de "=" indicando a promoção e por ultimo uma letra maíuscula indicando qual foi a promoção ocorrida;
+>     * `A promoção de um peão feita através de uma captura`, em que o peão captura uma peça e, ao capturar, atinge a casa de promoção, assim, apresentando os símbolos "+" e "=" na sua string;
+>     * `Roque`, representados pelos movimentos "O-O" e "O-O-O";
+>     * `O movimento de peças superiores a peões`, representado por uma letra maiúscula indicando a peça seguido de sua casa de destino;
+>     * `A captura de uma peça por uma peça superior`, representado por uma letra maiúscula indicando a peça, seguido do simbolo de captura "x" e a casa de destino;
+>* ![Views dos Mates](images/mates_views.jpg)
+>    * Por ultimo, fizemos a query e obtivemos os seguintes resultados:
+>* ![Query dos Mates](images/mates_query.jpg)
+>* ![Resultado dos Mates](images/mates_resultados.jpg)
+>    * Como podemos perceber, o jeito mais fácil de chegar-se em um Xeque-Mate é com a movimentação de peças superiores, obtendo 72% do total, e por último temos o movimento do roque, que é normalmente utilizado para proteger o Rei obtendo uma porcentagem de 0.008%. Esta query tem uma dificuldade alta.
 
 #### Pergunta/Análise 3
-> * Pergunta 3
+> * Com qual peça é mais feita Xeque Mate
 >   
->   * Explicação sucinta da análise que será feita e conjunto de queries que
->     responde à pergunta.
+>   * Aprofundando mais ainda no quesito de Xeques-Mate, podemos identificar as peças que finalizam com o jogo, assim, utilizando os 7 tipos de movimentos citados anteriormente podemos filtrar os dados por peça utilizada. Em um jogo de xadrez temos as seguintes peças:
+>     * `Rei`, representado pela letra maíuscula "K" em um PGN;
+>     * `Rainha`, representado pela letra maíuscula "Q" em um PGN;
+>     * `Torre`, representado pela letra maíuscula "R" em um PGN;
+>     * `Bispo`, representado pela letra maíuscula "B" em um PGN;
+>     * `Cavalo`, representado pela letra maíuscula "K" em um PGN;
+>     * `Peão`, representado por letras minúsculas de posição em um PGN;
+>* ![Views das Peças](images/pecas_views.jpg)
+>   * Após a filtragem, realizamos a contagem de cada caso, listando-os em uma tabela, obtendo os seguintes resultados
+>* ![Query das Peças](images/pecas_query.jpg)
+>* ![Resultado das Peças](images/pecas_resultados.jpg)
+>   * Podemos perceber que a rainha é a peça "mais matadora", isto pode ser explicado pelo fato que ela controla mais casas ao mesmo tempo se comparada com as outras peças. Além disso, jogadas em que o rei se move para que outra peça realize o Xeque-Mate são considerados Mates pelo Rei, que são extremamente raras.
 
 ### Perguntas/Análise Propostas mas Não Implementadas
 
